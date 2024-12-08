@@ -1,0 +1,28 @@
+{
+  "name": "devburger-api",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "author": {
+    "name": "Joaovittow",
+    "url": "https://github.com/joaovittow"
+  },
+  "license": "ISC",
+  "description": " DevBurger API",
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "eslint": "^9.16.0",
+    "globals": "^15.13.0",
+    "nodemon": "^3.1.7",
+    "sequelize-cli": "^6.6.2",
+    "sucrase": "^3.35.0"
+  }
+}
