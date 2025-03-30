@@ -78,6 +78,34 @@ class OrderController {
       return res.status(500).json({ error: 'Erro ao criar pedido' });
     }
   }
+  async index(req, res) {
+    const orders = await Order.find();
+
+    return res.json(orders);
+  }
+
+  async update(req, res) {
+    const schema = Yup.object({
+      status: Yup.string().required(),
+    });
+
+    try {
+      await schema.validate(req.body, { abortEarly: false });
+    } catch (err) {
+      return res.status(400).json({ error: err.errors });
+    }
+
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+      await Order.updateOne({ _id: id }, { status });
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+
+    return res.json({ message: 'Status updated successfully' });
+  }
 }
 
 export default new OrderController();
