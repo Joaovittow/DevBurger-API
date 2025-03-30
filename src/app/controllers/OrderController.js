@@ -11,58 +11,72 @@ class OrderController {
         .of(
           Yup.object({
             id: Yup.number().required(),
-            quantity: Yup.number().required(),
+            quantity: Yup.number().required().min(1),
           })
         ),
     });
 
     try {
-      schema.validateSync(req.body, { abortEarly: false });
+      await schema.validate(req.body, { abortEarly: false });
     } catch (err) {
       return res.status(400).json({ error: err.errors });
     }
 
-    const { products } = req.body;
+    try {
+      const { products } = req.body;
+      const productsIds = products.map((product) => product.id);
 
-    const productsIds = products.map((product) => product.id);
+      // Busca os produtos com suas categorias
+      const findProducts = await Product.findAll({
+        where: { id: productsIds },
+        include: [
+          {
+            model: Category,
+            as: 'category',
+            attributes: ['name'],
+          },
+        ],
+      });
 
-    const findProducts = await Product.findAll({
-      where: {
-        id: productsIds,
-      },
-      include: [
-        {
-          model: Category,
-          as: 'category',
-          attributes: ['name'],
+      // Verifica se todos os produtos foram encontrados
+      if (findProducts.length !== products.length) {
+        const foundIds = findProducts.map((p) => p.id);
+        const missingIds = productsIds.filter((id) => !foundIds.includes(id));
+        return res.status(404).json({
+          error: `Produtos não encontrados: ${missingIds.join(', ')}`,
+        });
+      }
+
+      // Formata os produtos para o pedido
+      const formattedProducts = findProducts.map((product) => {
+        const productItem = products.find((item) => item.id === product.id);
+
+        return {
+          id: product.id,
+          name: product.name,
+          category: product.category.name, // Corrigido para "category" (minúsculo)
+          price: product.price,
+          url: product.url,
+          quantity: productItem.quantity,
+        };
+      });
+
+      // Cria o pedido
+      const order = {
+        user: {
+          id: req.userId,
+          name: req.userName,
         },
-      ],
-    });
-
-    const formattedProducts = findProducts.map((product) => {
-      const productIndex = products.findIndex((item) => item.id === product.id);
-
-      const newProduct = {
-        id: product.id,
-        name: product.name,
-        Category: product.category.name,
-        price: product.price,
-        url: product.url,
-        quantity: products[productIndex].quantity,
+        products: formattedProducts,
+        status: 'Pedido Realizado',
       };
 
-      return newProduct;
-    });
-
-    const order = {
-      user: {
-        id: req.userId,
-        name: req.userName,
-      },
-      products: formattedProducts,
-    };
-
-    return res.status(201).json(order);
+      const createdOrder = await Order.create(order);
+      return res.status(201).json(createdOrder);
+    } catch (error) {
+      console.error('Error creating order:', error);
+      return res.status(500).json({ error: 'Erro ao criar pedido' });
+    }
   }
 }
 
