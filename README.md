@@ -61,11 +61,37 @@ Content-Type: application/json
 }
 ```
 
-### Produtos
-```http
-GET /products
-Authorization: Bearer <token>
-```
+## 🌐 Todas as Rotas
+
+### 🔐 Autenticação
+| Método | Rota           | Descrição                     | Body                                                                 |
+|--------|----------------|-------------------------------|----------------------------------------------------------------------|
+| POST   | `/auth/register` | Registrar novo usuário        | `{"name":"string","email":"string","password":"string"}`            |
+| POST   | `/auth/login`    | Login (gera token JWT)        | `{"email":"string","password":"string"}`                            |
+| POST   | `/auth/refresh`  | Refresh token                 | `{"token":"string"}`                                               |
+
+### 👥 Usuários
+| Método | Rota               | Descrição                     | Headers                          |
+|--------|--------------------|-------------------------------|----------------------------------|
+| GET    | `/users`           | Listar todos usuários         | `Authorization: Bearer <token>`  |
+| GET    | `/users/:id`       | Buscar usuário por ID         | `Authorization: Bearer <token>`  |
+| PUT    | `/users/:id`       | Atualizar usuário             | `Authorization: Bearer <token>`  |
+
+### 🍔 Produtos
+| Método | Rota               | Descrição                     | Body Example                      |
+|--------|--------------------|-------------------------------|-----------------------------------|
+| GET    | `/products`        | Listar todos produtos         | -                                 |
+| POST   | `/products`        | Criar novo produto (Admin)    | `{"name":"string","price":float,"category":"string"}` |
+| PUT    | `/products/:id`    | Atualizar produto             | `{"name":"string","price":float}` |
+| DELETE | `/products/:id`    | Deletar produto (Admin)       | -                                 |
+
+### 📦 Pedidos
+| Método | Rota               | Descrição                     | Body Example                      |
+|--------|--------------------|-------------------------------|-----------------------------------|
+| POST   | `/orders`          | Criar novo pedido             | `{"products":[{"id":int,"quantity":int}],"user_id":int}` |
+| GET    | `/orders`          | Listar todos pedidos          | `Authorization: Bearer <token>`   |
+| GET    | `/orders/:id`      | Buscar pedido por ID          | `Authorization: Bearer <token>`   |
+| PUT    | `/orders/:id`      | Atualizar status pedido       | `{"status":"string"}`            |
 
 ## 🏗️ Estrutura do Projeto
 ```
@@ -74,8 +100,6 @@ src/
 ├── models/         # Models do Sequelize/Mongoose
 ├── controllers/    # Lógica de negócio
 ├── middlewares/    # Autenticação e validadores
-├── services/       # Regras de negócio
 ├── routes/         # Definição de endpoints
-├── uploads/        # Arquivos estáticos
 └── app.js          # Configuração central
 ```
