@@ -2,7 +2,7 @@
 
 API para gerenciamento de pedidos de hamburgueria com arquitetura moderna.
 
-## 💻 Stack Tecnológica
+## 💻 Stacks
 
 ### 🚀 Core
 - **JavaScript** (ES6+)
