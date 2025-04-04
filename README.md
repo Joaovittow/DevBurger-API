@@ -47,51 +47,35 @@ npm run dev
 ```
 > A API estará disponível em `http://localhost:3001`
 
-## 🔌 Rotas Principais
-
-### Autenticação
-```http
-POST /auth/register
-Content-Type: application/json
-
-{
-  "name": "João",
-  "email": "joao@exemplo.com",
-  "password": "senha123"
-}
-```
 
 ## 🌐 Todas as Rotas
 
 ### 🔐 Autenticação
-| Método | Rota           | Descrição                     | Body                                                                 |
-|--------|----------------|-------------------------------|----------------------------------------------------------------------|
-| POST   | `/auth/register` | Registrar novo usuário        | `{"name":"string","email":"string","password":"string"}`            |
-| POST   | `/auth/login`    | Login (gera token JWT)        | `{"email":"string","password":"string"}`                            |
-| POST   | `/auth/refresh`  | Refresh token                 | `{"token":"string"}`                                               |
+| Método | Rota                          | Descrição                     | Body                                                                 | Headers               |
+|--------|-------------------------------|-------------------------------|----------------------------------------------------------------------|-----------------------|
+| POST   | `http://localhost:3001/users`    | Registrar novo usuário        | `{"name":"string","email":"string","password":"string"}`            | -                     |
+| POST   | `http://localhost:3001/session` | Login (gera token JWT)        | `{"email":"string","password":"string"}`                            | -                     |
 
-### 👥 Usuários
-| Método | Rota               | Descrição                     | Headers                          |
-|--------|--------------------|-------------------------------|----------------------------------|
-| GET    | `/users`           | Listar todos usuários         | `Authorization: Bearer <token>`  |
-| GET    | `/users/:id`       | Buscar usuário por ID         | `Authorization: Bearer <token>`  |
-| PUT    | `/users/:id`       | Atualizar usuário             | `Authorization: Bearer <token>`  |
+### 📂 Categorias
+| Método | Rota                     | Descrição                     | Body/FormData                   | Headers                          |
+|--------|--------------------------|-------------------------------|---------------------------------|----------------------------------|
+| GET    | `http://localhost:3001/categories`            | Listar todas categorias       | -                               | `Authorization: Bearer <token>`  |
+| POST   | `http://localhost:3001/categories`            | Criar nova categoria          | `name`: string<br>`file`: image | `Authorization: Bearer <token>`<br>`Content-Type: multipart/form-data` |
+| PUT    | `http://localhost:3001/categories/:id`        | Atualizar categoria           | `name`: string<br>`file`: image (opcional) | `Authorization: Bearer <token>`<br>`Content-Type: multipart/form-data` |
 
 ### 🍔 Produtos
-| Método | Rota               | Descrição                     | Body Example                      |
-|--------|--------------------|-------------------------------|-----------------------------------|
-| GET    | `/products`        | Listar todos produtos         | -                                 |
-| POST   | `/products`        | Criar novo produto (Admin)    | `{"name":"string","price":float,"category":"string"}` |
-| PUT    | `/products/:id`    | Atualizar produto             | `{"name":"string","price":float}` |
-| DELETE | `/products/:id`    | Deletar produto (Admin)       | -                                 |
+| Método | Rota                     | Descrição                     | Body/FormData                   | Headers                          |
+|--------|--------------------------|-------------------------------|---------------------------------|----------------------------------|
+| GET    | `http://localhost:3001/products`              | Listar todos produtos         | -                               | `Authorization: Bearer <token>`  |
+| POST   | `http://localhost:3001/products`              | Criar novo produto            | `name`: string<br>`price`: number<br>`category_id`: number<br>`file`: image<br>`offer`: boolean | `Authorization: Bearer <token>`<br>`Content-Type: multipart/form-data` |
+| PUT    | `http://localhost:3001/products/:id`          | Atualizar produto             | `name`: string<br>`price`: number<br>`file`: image (opcional) | `Authorization: Bearer <token>`<br>`Content-Type: multipart/form-data` |
 
 ### 📦 Pedidos
-| Método | Rota               | Descrição                     | Body Example                      |
-|--------|--------------------|-------------------------------|-----------------------------------|
-| POST   | `/orders`          | Criar novo pedido             | `{"products":[{"id":int,"quantity":int}],"user_id":int}` |
-| GET    | `/orders`          | Listar todos pedidos          | `Authorization: Bearer <token>`   |
-| GET    | `/orders/:id`      | Buscar pedido por ID          | `Authorization: Bearer <token>`   |
-| PUT    | `/orders/:id`      | Atualizar status pedido       | `{"status":"string"}`            |
+| Método | Rota                     | Descrição                     | Body                                             | Headers                          |
+|--------|--------------------------|-------------------------------|--------------------------------------------------|----------------------------------|
+| POST   | `http://localhost:3001/orders`                | Criar novo pedido             | `{"products":[{"id":int,"quantity":int}],"user_id":int}` | `Authorization: Bearer <token>`  |
+| GET    | `http://localhost:3001/orders`                | Listar todos pedidos          | -                                                | `Authorization: Bearer <token>`  |
+| PUT    | `http://localhost:3001/orders/:id`            | Atualizar status pedido       | `{"status":"string"}`                            | `Authorization: Bearer <token>`  |
 
 ## 🏗️ Estrutura do Projeto
 ```
