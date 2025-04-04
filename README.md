@@ -1,91 +1,81 @@
 # 🍔 DevBurger API
 
-API para gerenciamento de pedidos de hamburgueria desenvolvida com Node.js + Express.
+API para gerenciamento de pedidos de hamburgueria com arquitetura moderna.
 
-## 🚀 Começando
+## 💻 Stack Tecnológica
+
+### 🚀 Core
+- **JavaScript** (ES6+)
+- **Node.js** v20.9.0(LTS)
+- **Express** (Framework web)
+
+### 🛢️ Bancos de Dados
+- **PostgreSQL** (Principal)
+- **MongoDB** (Complementar)
+- **Sequelize** (ORM para PostgreSQL)
+- **Mongoose** (ODM para MongoDB)
+- **Sequelize-cli** (Ferramentas CLI)
+
+### 🔐 Segurança & Autenticação
+- **Bcrypt** (Hash de senhas)
+- **JsonWebToken** (Autenticação JWT)
+- **Yup** (Validação de schemas)
+
+### 🛠️ Ferramentas de Desenvolvimento
+- **Sucrase** (Compilação mais rápida)
+- **Yarn** (Gerenciador de pacotes)
+- **Nodemon** (Hot reload)
+- **Multer** (Upload de arquivos)
+- **Docker** (Conteinerização)
+
+### 🎨 Code Quality
+- **ESLint** (Linter)
+- **Prettier** (Formatação de código)
+- **CORS** (Middleware de segurança)
+
+## 🚀 Como Executar
 
 ### Pré-requisitos
+- Docker
 - Node.js v20.9.0(LTS)
-- npm ou yarn
+- Yarn
 
-### Instalação
-1. Clone o repositório:
-```bash
-git clone https://github.com/Joaovittow/DevBurger-API.git
-cd DevBurger-API
-```
-
-2. Instale as dependências:
+### Localmente
 ```bash
 npm install
+npm run dev
 ```
-
-3. Inicie o servidor:
-```bash
-npm start
-```
-
 > A API estará disponível em `http://localhost:3001`
 
-## 🔌 Rotas da API
+## 🔌 Rotas Principais
 
 ### Autenticação
-#### `POST /auth/register`
-Registra um novo usuário:
-```json
-{
-  "name": "Nome do usuário",
-  "email": "email@exemplo.com",
-  "password": "senha123"
-}
-```
+```http
+POST /auth/register
+Content-Type: application/json
 
-#### `POST /auth/login`
-Gera token JWT:
-```json
 {
-  "email": "email@exemplo.com",
+  "name": "João",
+  "email": "joao@exemplo.com",
   "password": "senha123"
 }
 ```
 
 ### Produtos
-#### `GET /products`
-Lista todos os produtos
-
-#### `POST /products` (Admin)
-Cria novo produto:
-```json
-{
-  "name": "Hambúrguer",
-  "price": 20.99,
-  "category": "lanche"
-}
+```http
+GET /products
+Authorization: Bearer <token>
 ```
 
-### Pedidos
-#### `POST /orders`
-Cria novo pedido:
-```json
-{
-  "products": [
-    {
-      "id": 1,
-      "quantity": 2
-    }
-  ],
-  "user_id": 1
-}
-```
-
-## 🏗️ Estrutura
+## 🏗️ Estrutura do Projeto
 ```
 src/
-├── controllers/    # Lógica dos controllers
-├── middlewares/    # Middlewares (JWT)
-├── routes/         # Definição de rotas
-├── app.js          # Configuração do Express
-└── server.js       # Ponto de entrada
+├── config/         # Configurações de DB
+├── models/         # Models do Sequelize/Mongoose
+├── controllers/    # Lógica de negócio
+├── middlewares/    # Autenticação e validadores
+├── services/       # Regras de negócio
+├── routes/         # Definição de endpoints
+├── uploads/        # Arquivos estáticos
+└── app.js          # Configuração central
 ```
-
-
