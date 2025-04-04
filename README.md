@@ -5,7 +5,7 @@ API para gerenciamento de pedidos de hamburgueria desenvolvida com Node.js + Exp
 ## 🚀 Começando
 
 ### Pré-requisitos
-- Node.js (versão LTS)
+- Node.js v20.9.0(LTS)
 - npm ou yarn
 
 ### Instalação
@@ -88,7 +88,4 @@ src/
 └── server.js       # Ponto de entrada
 ```
 
-## 📜 Licença
-MIT © [João Vítto](https://github.com/Joaovittow)
 
-> Dúvidas? Abra uma [issue](https://github.com/Joaovittow/DevBurger-API/issues)!
