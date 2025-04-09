@@ -85,7 +85,7 @@ class ProductController {
         where: {
           id,
         },
-      }
+      },
     );
 
     return res.status(200).json();
