@@ -1,5 +1,6 @@
-import express from 'express';
 import { resolve } from 'node:path';
+import cors from 'cors';
+import express from 'express';
 
 import routes from './routes';
 
@@ -8,6 +9,8 @@ import './database';
 class App {
   constructor() {
     this.app = express();
+
+    this.app.use(cors());
     this.middlewares();
     this.routes();
   }
