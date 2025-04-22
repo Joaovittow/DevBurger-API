@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import multer from 'multer';
-import multerConfig from './config/multer';
 import authMiddleware from './app/middlewares/auth';
+import multerConfig from './config/multer';
 
-import UserController from './app/controllers/UserController';
-import SessionController from './app/controllers/SessionController';
-import ProductController from './app/controllers/ProductController';
 import CategoryController from './app/controllers/CategoryController';
 import OrderController from './app/controllers/OrderController';
+import ProductController from './app/controllers/ProductController';
+import SessionController from './app/controllers/SessionController';
+import UserController from './app/controllers/UserController';
 
 const routes = new Router();
 
