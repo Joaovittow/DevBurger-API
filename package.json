@@ -13,6 +13,7 @@
   "description": " DevBurger API",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.0",
@@ -24,7 +25,10 @@
     "yup": "^1.5.0"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@biomejs/biome": "^1.9.4",
+=======
+>>>>>>> fb2bac09922571527fd063706497691b4422fa10
     "globals": "^15.13.0",
     "init": "^0.1.2",
     "nodemon": "^3.1.7",
