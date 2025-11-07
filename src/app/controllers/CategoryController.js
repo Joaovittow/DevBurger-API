@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+import { unlink } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import Category from '../models/Category';
 import User from '../models/User';
 
@@ -103,6 +105,47 @@ class CategoryController {
     const categories = await Category.findAll();
 
     return res.json(categories);
+  }
+
+  async delete(req, res) {
+    const { admin: isAdmin } = await User.findByPk(req.userId);
+
+    if (!isAdmin) {
+      return res.status(401).json();
+    }
+
+    const { id } = req.params;
+
+    const category = await Category.findByPk(id);
+
+    if (!category) {
+      return res.status(400).json({ error: 'Make sure your ID is correct' });
+    }
+
+    if (category.path) {
+      const filePath = resolve(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'uploads',
+        category.path,
+      );
+
+      try {
+        await unlink(filePath);
+      } catch (err) {
+        // Se o arquivo não existir, continua com a exclusão
+      }
+    }
+
+    await Category.destroy({
+      where: {
+        id,
+      },
+    });
+
+    return res.status(200).json();
   }
 }
 
