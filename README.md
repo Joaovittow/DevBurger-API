@@ -94,7 +94,7 @@ Edite o arquivo `.env` com suas configurações:
 DB_HOST=localhost
 DB_USER=postgres
 DB_PASS=postgres
-DB_NAME=devburger
+DB_NAME=postgres
 
 # Database MongoDB
 MONGO_URL=mongodb://localhost:27017/devburger
@@ -115,7 +115,7 @@ PORT=3001
 **PostgreSQL:**
 ```bash
 # Crie o banco de dados
-createdb devburger
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres 
 
 # Execute as migrações
 npx sequelize-cli db:migrate
@@ -124,19 +124,14 @@ npx sequelize-cli db:migrate
 **MongoDB:**
 ```bash
 # Certifique-se de que o MongoDB está rodando
-mongod
+docker run --name mongodb -p 27017:27017 -d -t mongo 
 ```
 
 ## ⚙️ Configuração
 
 ### Banco de Dados PostgreSQL
 
-As configurações do PostgreSQL estão em `src/config/database.js`. Por padrão:
-- Host: `localhost`
-- Port: `5432` (padrão PostgreSQL)
-- Database: `postgres`
-- Username: `postgres`
-- Password: `postgres`
+As configurações do PostgreSQL são definidas via variáveis de ambiente (arquivo `.env`) e lidas em `src/config/database.js`.
 
 ### Banco de Dados MongoDB
 
@@ -162,19 +157,7 @@ yarn dev
 npm run dev
 ```
 
-A API estará disponível em `http://localhost:3001`
-
-### Modo Produção
-```bash
-node src/server.js
-```
-
-## 📚 Documentação da API
-
-### Base URL
-```
-http://localhost:3001
-```
+A API estará disponível em `http://localhost:${PORT}` (definido no `.env`)
 
 ### Autenticação
 
@@ -511,29 +494,6 @@ Content-Type: application/json
 
 ---
 
-### 💳 Pagamentos
-
-#### Criar Intent de Pagamento (Stripe)
-```http
-POST /create-payment-intent
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "amount": 4000,
-  "currency": "brl"
-}
-```
-
-**Resposta (200):**
-```json
-{
-  "clientSecret": "pi_xxx_secret_xxx"
-}
-```
-
----
-
 ## 🏗️ Estrutura do Projeto
 
 ```
@@ -609,7 +569,7 @@ A API utiliza os seguintes códigos de status HTTP:
 - As imagens são armazenadas localmente na pasta `uploads/`
 - Produtos e categorias são armazenados no PostgreSQL
 - Pedidos são armazenados no MongoDB
-- O token JWT expira após o período configurado (padrão: 9999 dias)
+- O token JWT expira após o período configurado
 - Apenas administradores podem atualizar o status dos pedidos
 - Validações são feitas usando Yup antes de processar as requisições
 
@@ -617,10 +577,6 @@ A API utiliza os seguintes códigos de status HTTP:
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.
 
-## 📄 Licença
-
-Este projeto está sob a licença ISC.
-
 ---
 
-**Desenvolvido com ❤️ por [Joaovittow](https://github.com/joaovittow)**
+**Desenvolvido por [Joaovittow](https://github.com/joaovittow)**
