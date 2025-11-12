@@ -10,7 +10,13 @@ class App {
   constructor() {
     this.app = express();
 
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: 'https://devvburger.netlify.app',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+      }),
+    );
     this.middlewares();
     this.routes();
   }
