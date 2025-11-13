@@ -1,6 +1,7 @@
-const defaultPort = process.env.PORT || 3001;
+const { APP_URL, PORT = 3001 } = process.env;
 
-export default {
-  url: process.env.APP_URL || `http://localhost:${defaultPort}`,
+const appConfig = {
+  url: APP_URL || `http://localhost:${PORT}`,
 };
 
+export default appConfig;

@@ -1,6 +1,7 @@
-import * as Yup from 'yup';
 import { unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import * as Yup from 'yup';
+import { deleteFromCloudinary, isCloudinaryUrl } from '../../utils/cloudinary';
 import Category from '../models/Category';
 import User from '../models/User';
 
@@ -22,7 +23,11 @@ class CategoryController {
       return res.status(401).json();
     }
 
-    const { filename: path } = req.file;
+    if (!req.file?.path) {
+      return res.status(400).json({ error: 'Image upload failed' });
+    }
+
+    const path = req.file.path;
     const { name } = req.body;
 
     const categoryExists = await Category.findOne({
@@ -67,11 +72,6 @@ class CategoryController {
       return res.status(400).json({ error: 'Make sure your ID is correct' });
     }
 
-    let path;
-    if (req.file) {
-      path = req.file.filename;
-    }
-
     const { name } = req.body;
 
     if (name) {
@@ -86,22 +86,48 @@ class CategoryController {
       }
     }
 
-    await Category.update(
-      {
-        name,
-        path,
-      },
-      {
-        where: {
-          id,
-        },
-      },
-    );
+    const updateData = {};
+
+    if (name !== undefined) {
+      updateData.name = name;
+    }
+
+    if (req.file?.path) {
+      const previousPath = categoryExists.path;
+      updateData.path = req.file.path;
+
+      await categoryExists.update(updateData);
+
+      if (previousPath) {
+        if (isCloudinaryUrl(previousPath)) {
+          await deleteFromCloudinary(previousPath);
+        } else {
+          const filePath = resolve(
+            __dirname,
+            '..',
+            '..',
+            '..',
+            'uploads',
+            previousPath,
+          );
+
+          try {
+            await unlink(filePath);
+          } catch (_err) {
+            // Se o arquivo não existir, continua com a atualização
+          }
+        }
+      }
+
+      return res.status(200).json();
+    }
+
+    await categoryExists.update(updateData);
 
     return res.status(200).json();
   }
 
-  async index(req, res) {
+  async index(_req, res) {
     const categories = await Category.findAll();
 
     return res.json(categories);
@@ -123,19 +149,23 @@ class CategoryController {
     }
 
     if (category.path) {
-      const filePath = resolve(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        'uploads',
-        category.path,
-      );
+      if (isCloudinaryUrl(category.path)) {
+        await deleteFromCloudinary(category.path);
+      } else {
+        const filePath = resolve(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'uploads',
+          category.path,
+        );
 
-      try {
-        await unlink(filePath);
-      } catch (err) {
-        // Se o arquivo não existir, continua com a exclusão
+        try {
+          await unlink(filePath);
+        } catch (_err) {
+          // Se o arquivo não existir, continua com a exclusão
+        }
       }
     }
 

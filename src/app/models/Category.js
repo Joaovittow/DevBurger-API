@@ -10,11 +10,16 @@ class Category extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            if (!this.path) {
+            const { path } = this;
+            if (!path) {
               return null;
             }
 
-            return `${appConfig.url}/category-file/${this.path}`;
+            if (path.startsWith('http')) {
+              return path;
+            }
+
+            return `${appConfig.url}/category-file/${path}`;
           },
         },
       },

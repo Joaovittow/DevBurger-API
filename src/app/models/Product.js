@@ -12,11 +12,16 @@ class Product extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            if (!this.path) {
+            const { path } = this;
+            if (!path) {
               return null;
             }
 
-            return `${appConfig.url}/product-file/${this.path}`;
+            if (path.startsWith('http')) {
+              return path;
+            }
+
+            return `${appConfig.url}/product-file/${path}`;
           },
         },
       },
