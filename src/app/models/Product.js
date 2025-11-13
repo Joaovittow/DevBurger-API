@@ -1,4 +1,5 @@
 import Sequelize, { Model } from 'sequelize';
+import appConfig from '../../config/app';
 
 class Product extends Model {
   static init(sequelize) {
@@ -11,7 +12,11 @@ class Product extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            return `http://localhost:3001/product-file/${this.path}`;
+            if (!this.path) {
+              return null;
+            }
+
+            return `${appConfig.url}/product-file/${this.path}`;
           },
         },
       },
